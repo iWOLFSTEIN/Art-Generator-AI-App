@@ -6,6 +6,7 @@ class CustomTextButton extends StatefulWidget {
       required this.buttonHeight,
       required this.action,
       required this.title,
+      required this.borderRadius,
       required this.fontSize})
       : super(key: key);
 
@@ -13,7 +14,7 @@ class CustomTextButton extends StatefulWidget {
   final Function() action;
   final String title;
   final double fontSize;
-
+  final double borderRadius;
   @override
   State<CustomTextButton> createState() => _CustomTextButtonState();
 }
@@ -27,7 +28,7 @@ class _CustomTextButtonState extends State<CustomTextButton>
 
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: Offset.zero,
-    end: const Offset(0.5, 0.0),
+    end: const Offset(0.3, 0.0),
   ).animate(CurvedAnimation(
     parent: _controller,
     curve: Curves.elasticIn,
@@ -44,10 +45,9 @@ class _CustomTextButtonState extends State<CustomTextButton>
     return Container(
       width: double.infinity,
       height: widget.buttonHeight,
-      decoration: const BoxDecoration(
-          // color: Color(0xFF06283D),
-          color: Color(0xFF1F1F1F),
-          borderRadius: BorderRadius.all(Radius.circular(15))),
+      decoration: BoxDecoration(
+          color: const Color(0xFF1F1F1F),
+          borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))),
       child: TextButton(
         onPressed: widget.action,
         child: Row(

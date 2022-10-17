@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
+import '../widgets/app_branding.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/input_prompt.dart';
 
@@ -62,51 +63,7 @@ class _HomeState extends State<Home>
               Container(
                 height: 30,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // RotationTransition(
-                        //   turns: rotationAnimation,
-                        //   child:
-                        Opacity(
-                          opacity: 0.8,
-                          child: Image.asset(
-                            'images/technology.png',
-                            height: 30,
-                            width: 30,
-                          ),
-                        ),
-                        // ),
-                        const SizedBox(
-                          width: 7.5,
-                        ),
-                        const Text(
-                          'stem ai',
-                          style: TextStyle(
-                              color: Color(0xFF1F1F1F),
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        'by clock studio',
-                        style: TextStyle(
-                          color: const Color(0xFF1F1F1F).withOpacity(0.6),
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              AppBranding(),
               Container(
                 height: 40,
               ),
@@ -150,6 +107,7 @@ class _HomeState extends State<Home>
                   buttonHeight: 60.0,
                   action: () {},
                   title: 'Generate Image',
+                  borderRadius: 15,
                   fontSize: 17.5,
                 ),
               ),
