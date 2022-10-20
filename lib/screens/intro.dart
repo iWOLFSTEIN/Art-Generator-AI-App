@@ -5,6 +5,7 @@ import 'package:stem_ai_art_generator/screens/home.dart';
 import 'package:stem_ai_art_generator/widgets/app_branding.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
 
+import '../widgets/custom_slide_fade_transition.dart';
 import '../widgets/term_and_services_text_widget.dart';
 
 class Intro extends StatefulWidget {
@@ -151,47 +152,45 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                     ],
                   ),
                   Container(),
-                  customSlideFadeTransition(
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 15, top: 0),
-                      child: AppBranding(showCompanyName: false),
-                    ),
-                  ),
-                  customSlideFadeTransition(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          richTextSnippet(text: 'Convert ', boldText: 'Ideas'),
-                          richTextSnippet(
-                              text: 'Into Beautiful ', boldText: 'Images'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  customSlideFadeTransition(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: CustomTextButton(
-                          buttonHeight: 70,
-                          action: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const Home()));
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                (route) => false);
-                          },
-                          title: 'Get Started',
-                          borderRadius: 20,
-                          fontSize: 20),
-                    ),
-                  ),
-                  customSlideFadeTransition(
+                  CustomSlideFadeTransition(
+                      animationController: _animationController,
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 15, top: 0),
+                        child: AppBranding(showCompanyName: false),
+                      )),
+                  CustomSlideFadeTransition(
+                      animationController: _animationController,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            richTextSnippet(
+                                text: 'Convert ', boldText: 'Ideas'),
+                            richTextSnippet(
+                                text: 'Into Beautiful ', boldText: 'Images'),
+                          ],
+                        ),
+                      )),
+                  CustomSlideFadeTransition(
+                      animationController: _animationController,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: CustomTextButton(
+                            buttonHeight: 70,
+                            action: () {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Home()),
+                                  (route) => false);
+                            },
+                            title: 'Get Started',
+                            borderRadius: 20,
+                            fontSize: 20),
+                      )),
+                  CustomSlideFadeTransition(
+                      animationController: _animationController,
                       child: const TermsAndServicesTextWidget()),
                   Container(),
                   Container()
@@ -200,24 +199,6 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
             ),
           ),
         ]);
-  }
-
-  Widget customSlideFadeTransition({required Widget child}) {
-    return SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0.0, 0.4),
-          end: const Offset(0.0, 0.0),
-        ).animate(CurvedAnimation(
-          parent: _animationController,
-          curve: Curves.fastOutSlowIn,
-        )),
-        child: FadeTransition(
-          opacity: CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.fastOutSlowIn,
-          ),
-          child: child,
-        ));
   }
 
   RichText richTextSnippet({required text, required boldText}) {
@@ -229,10 +210,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
         children: <TextSpan>[
           TextSpan(
               text: boldText,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 27,
-                  color: Color(0xFF3DABF5))),
+              style: const TextStyle(fontSize: 25, color: Color(0xFF3DABF5))),
         ],
       ),
     );
@@ -280,18 +258,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                   animationId++;
                   activateAnimation = true;
                 });
-                Future.delayed(const Duration(milliseconds: 1000), (() {
-                  _pageController
-                      .animateToPage(1,
-                          curve: Curves.fastOutSlowIn,
-                          duration: const Duration(milliseconds: 1000))
-                      .whenComplete(
-                    () {
-                      _animationControllerRow.forward();
-                      _animationController.forward();
-                    },
-                  );
-                }));
+                navigatorToNextIntroPage();
               }
             : () {
                 setState(() {
@@ -329,5 +296,19 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
             ),
           ),
         ]);
+  }
+
+  void navigatorToNextIntroPage() {
+    Future.delayed(const Duration(milliseconds: 1000), (() {
+      _pageController
+          .animateToPage(1,
+              curve: Curves.ease, duration: const Duration(milliseconds: 1000))
+          .whenComplete(
+        () {
+          _animationControllerRow.forward();
+          _animationController.forward();
+        },
+      );
+    }));
   }
 }

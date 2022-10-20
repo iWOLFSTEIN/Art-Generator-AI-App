@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
+import 'package:stem_ai_art_generator/widgets/custom_slide_fade_transition.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
 import '../widgets/app_branding.dart';
 import '../widgets/custom_text_field.dart';
@@ -13,22 +14,18 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home>
-//  with SingleTickerProviderStateMixin
-{
-  // late final _animationController = AnimationController(
-  //     vsync: this, duration: const Duration(milliseconds: 10000))
-  //   ..repeat();
-
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  late final _animationController = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 1000));
   // late final rotationAnimation =
   //     CurvedAnimation(parent: _animationController, curve: Curves.linear);
 
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   _animationController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _animationController.dispose();
+    super.dispose();
+  }
 
   final inputController = TextEditingController();
   List images = [
@@ -63,7 +60,7 @@ class _HomeState extends State<Home>
               Container(
                 height: 30,
               ),
-              AppBranding(),
+              const AppBranding(),
               Container(
                 height: 40,
               ),
@@ -73,29 +70,27 @@ class _HomeState extends State<Home>
               ),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.only(left: 10, right: 10),
+                padding: const EdgeInsets.only(left: 20, right: 10),
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      InputPrompt(prompt: 'Astronaut riding horse on moon'),
-                      InputPrompt(prompt: 'Dragon queen'),
-                      InputPrompt(prompt: 'Unicorn sitting on mountain'),
-                      InputPrompt(
-                          prompt: 'A guy with mustache on a metro station'),
-                      InputPrompt(prompt: 'Adorable robot in the water'),
-                      InputPrompt(prompt: 'Robotic monkey'),
-                      SizedBox(
-                        height: 5,
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    InputPrompt(prompt: 'Astronaut riding horse on moon'),
+                    InputPrompt(prompt: 'Dragon queen'),
+                    InputPrompt(prompt: 'Unicorn sitting on mountain'),
+                    InputPrompt(
+                        prompt: 'A guy with mustache on a metro station'),
+                    InputPrompt(prompt: 'Adorable robot in the water'),
+                    InputPrompt(prompt: 'Robotic monkey'),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(
