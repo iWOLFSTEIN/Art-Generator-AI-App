@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
 import 'package:stem_ai_art_generator/screens/home.dart';
 import 'package:stem_ai_art_generator/screens/intro.dart';
+import 'package:stem_ai_art_generator/screens/loading.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Poppins'),
-        home: const Intro(),
+        home: const Loading(),
       ),
     );
   }

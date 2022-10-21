@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
@@ -36,8 +37,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ];
   @override
   Widget build(BuildContext context) {
-    // var height = MediaQuery.of(context).size.height;
-    // var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     List oddImages = [];
     List evenImages = [];
     for (var i = 0; i < images.length; i++) {
@@ -168,9 +169,32 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       padding: const EdgeInsets.only(bottom: 9),
       child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(15)),
-          child: FadeInImage.assetNetwork(
-            image: i,
-            placeholder: 'images/placeholder.png',
+          child:
+              //  FadeInImage.assetNetwork(
+              //   image: i,
+              //   placeholder: 'images/placeholder.png',
+              // )
+
+              CachedNetworkImage(
+            imageUrl: i,
+            fadeOutDuration: const Duration(milliseconds: 300),
+            fadeOutCurve: Curves.easeOut,
+            fadeInDuration: const Duration(milliseconds: 700),
+            fadeInCurve: Curves.easeIn,
+            // imageBuilder: (context, imageProvider) => ConstrainedBox(
+            //   constraints: const BoxConstraints(
+            //     minHeight: 100,
+            //   ),
+            //   child: Container(
+            //     // decoration:
+            //     //     BoxDecoration(image: DecorationImage(image: imageProvider)
+            //     //     ),
+            //     child: Image.network(i),
+            //   ),
+            // ),
+            placeholder: (context, url) =>
+                Image.asset('images/placeholder.png'),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           )),
     );
   }
