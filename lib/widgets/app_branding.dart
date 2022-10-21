@@ -15,23 +15,28 @@ class AppBranding extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+            children: const [
               Opacity(
-                opacity: 0.8,
-                child: Image.asset(
-                  'images/technology.png',
-                  height: 25,
-                  width: 25,
-                ),
-              ),
-              const SizedBox(
+                  opacity: 1.0,
+                  child: ImageIcon(
+                    AssetImage('images/technology.png'),
+                    size: 24,
+                    color: Color(0xFF1F1F1F),
+                  )
+                  //  Image.asset(
+                  //   'images/technology.png',
+                  //   height: 25,
+                  //   width: 25,
+                  // ),
+                  ),
+              SizedBox(
                 width: 7.5,
               ),
-              const Text(
+              Text(
                 'stem ai',
                 style: TextStyle(
                     color: Color(0xFF1F1F1F),
-                    fontSize: 25,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold),
               ),
             ],

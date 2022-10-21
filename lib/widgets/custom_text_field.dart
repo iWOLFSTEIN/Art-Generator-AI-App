@@ -16,12 +16,12 @@ class CustomTextField extends StatelessWidget {
         controller: inputController,
         style: const TextStyle(fontSize: 17, color: Colors.black),
         decoration: InputDecoration(
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(13),
-            child: Image.asset(
-              'images/cloud.png',
-              height: 10,
-              width: 10,
+          prefixIcon: const Padding(
+            padding: EdgeInsets.all(13),
+            child: ImageIcon(
+              AssetImage('images/cloud.png'),
+              size: 20,
+              color: Colors.black,
             ),
           ),
           isCollapsed: true,

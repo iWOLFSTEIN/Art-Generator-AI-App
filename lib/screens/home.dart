@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
-import 'package:stem_ai_art_generator/widgets/custom_slide_fade_transition.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
 import '../widgets/app_branding.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/generated_image.dart';
 import '../widgets/input_prompt.dart';
 
 class Home extends StatefulWidget {
@@ -18,8 +17,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late final _animationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 1000));
-  // late final rotationAnimation =
-  //     CurvedAnimation(parent: _animationController, curve: Curves.linear);
 
   @override
   void dispose() {
@@ -35,10 +32,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     'https://th-thumbnailer.cdn-si-edu.com/bZAar59Bdm95b057iESytYmmAjI=/1400x1050/filters:focal(594x274:595x275)/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/95/db/95db799b-fddf-4fde-91f3-77024442b92d/egypt_kitty_social.jpg',
     'https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y3V0ZSUyMGNhdHxlbnwwfHwwfHw%3D&w=1000&q=80',
   ];
+
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     List oddImages = [];
     List evenImages = [];
     for (var i = 0; i < images.length; i++) {
@@ -139,7 +135,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           Expanded(
                               child: Column(
                             children: [
-                              for (var i in oddImages) generatedImage(i),
+                              for (var i in oddImages)
+                                GeneratedImage(imageAdress: i),
                             ],
                           )),
                           const SizedBox(
@@ -148,7 +145,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           Expanded(
                               child: Column(
                             children: [
-                              for (var i in evenImages) generatedImage(i),
+                              for (var i in evenImages)
+                                GeneratedImage(imageAdress: i),
                             ],
                           ))
                         ],
@@ -161,41 +159,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-    );
-  }
-
-  Padding generatedImage(i) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 9),
-      child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
-          child:
-              //  FadeInImage.assetNetwork(
-              //   image: i,
-              //   placeholder: 'images/placeholder.png',
-              // )
-
-              CachedNetworkImage(
-            imageUrl: i,
-            fadeOutDuration: const Duration(milliseconds: 300),
-            fadeOutCurve: Curves.easeOut,
-            fadeInDuration: const Duration(milliseconds: 700),
-            fadeInCurve: Curves.easeIn,
-            // imageBuilder: (context, imageProvider) => ConstrainedBox(
-            //   constraints: const BoxConstraints(
-            //     minHeight: 100,
-            //   ),
-            //   child: Container(
-            //     // decoration:
-            //     //     BoxDecoration(image: DecorationImage(image: imageProvider)
-            //     //     ),
-            //     child: Image.network(i),
-            //   ),
-            // ),
-            placeholder: (context, url) =>
-                Image.asset('images/placeholder.png'),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          )),
     );
   }
 }
