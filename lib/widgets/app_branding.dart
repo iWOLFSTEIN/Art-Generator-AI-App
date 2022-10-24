@@ -15,12 +15,13 @@ class AppBranding extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
               Opacity(
                   opacity: 1.0,
                   child: ImageIcon(
                     AssetImage('images/technology.png'),
-                    size: 24,
+                    size: 23,
                     color: Color(0xFF1F1F1F),
                   )
                   //  Image.asset(

@@ -29,20 +29,24 @@ class _GeneratedImageState extends State<GeneratedImage> {
 
   _getWidgetInfo() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer.periodic(const Duration(seconds: 1), (timer) {
-        var postRenderedHeight =
-            _cachedNetworkImageKey.currentContext!.size!.height;
+      Timer.periodic(const Duration(milliseconds: 100), (timer) {
+        double? postRenderedHeight;
+        try {
+          postRenderedHeight =
+              _cachedNetworkImageKey.currentContext!.size!.height;
 
-        if (_assetImageKey.currentWidget == null) {
-          setState(() {
-            containerHeight = postRenderedHeight;
-          });
-          timer.cancel();
-        } else {
-          setState(() {
-            containerHeight = postRenderedHeight;
-          });
-        }
+          if (_assetImageKey.currentWidget == null) {
+            setState(() {
+              containerHeight = postRenderedHeight!;
+            });
+            timer.cancel();
+          } else {
+            setState(() {
+              containerHeight = postRenderedHeight!;
+            });
+          }
+        } catch (e) {}
+        // print(containerHeight);
       });
     });
   }
@@ -55,10 +59,16 @@ class _GeneratedImageState extends State<GeneratedImage> {
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           child: Stack(
             children: [
+              // Stack(
+              //   children: [
+              // FadeInImage.assetNetwork(
+              //     key: _cachedNetworkImageKey,
+              //     placeholder: 'images/placeholder.png',
+              //     image: widget.imageAdress),
               CachedNetworkImage(
                 key: _cachedNetworkImageKey,
                 imageUrl: widget.imageAdress,
-                fadeOutDuration: const Duration(milliseconds: 200),
+                fadeOutDuration: const Duration(milliseconds: 300),
                 fadeOutCurve: Curves.easeOut,
                 fadeInDuration: const Duration(milliseconds: 700),
                 fadeInCurve: Curves.easeIn,
@@ -68,31 +78,32 @@ class _GeneratedImageState extends State<GeneratedImage> {
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
-              Container(
+              //     Container(
+              //       height: containerHeight,
+              //       color: Colors.black.withOpacity(0.3),
+              //     )
+              //   ],
+              // ),
+
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 700),
+                curve: Curves.ease,
                 height: containerHeight,
                 width: double.infinity,
-                color: (_assetImageKey.currentWidget != null)
-                    ? Colors.black.withOpacity(0.0)
-                    : Colors.black.withOpacity(0.3),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 700),
-                  curve: Curves.ease,
-                  height: containerHeight,
-                  width: double.infinity,
-                  alignment: Alignment.bottomLeft,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 35,
-                      child: Center(
-                        child: Text(
-                          'An image is placed here so that the user can see it',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12, height: 1),
-                        ),
+                // color: Colors.black.withOpacity(0.3),
+                alignment: Alignment.bottomLeft,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 35,
+                    child: Center(
+                      child: Text(
+                        'An image is placed here so that the user can see it',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 12, height: 1),
                       ),
                     ),
                   ),

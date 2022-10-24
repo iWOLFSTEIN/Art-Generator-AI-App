@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
+import 'package:stem_ai_art_generator/widgets/custom_alert_dialogue.dart';
 import 'package:stem_ai_art_generator/screens/home.dart';
 import 'package:stem_ai_art_generator/screens/intro.dart';
 import 'package:stem_ai_art_generator/screens/loading.dart';

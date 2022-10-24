@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
+import 'package:stem_ai_art_generator/screens/loading.dart';
+import 'package:stem_ai_art_generator/widgets/custom_alert_dialogue.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
 import '../widgets/app_branding.dart';
 import '../widgets/custom_text_field.dart';
@@ -97,7 +99,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: CustomTextButton(
                   buttonHeight: 60.0,
-                  action: () {},
+                  action: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => const Loading()));
+
+                    var alert = CustomAlertDialogue(
+                      title: 'Are you sure you want to re-generate the image?',
+                      subtitle:
+                          'Make sure you saved the image you liked before proceeding.',
+                      actionTitle: 'Generate Again',
+                      action: () {},
+                    );
+                    showDialog(context: context, builder: (context) => alert);
+                  },
                   title: 'Generate Image',
                   borderRadius: 15,
                   fontSize: 17.5,
