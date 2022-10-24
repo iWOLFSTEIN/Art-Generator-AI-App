@@ -21,10 +21,10 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
   bool activateAnimation = false;
   int animationId = 0;
 
-  late final _animationController = AnimationController(
+  late final _slideFadeAnimationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 1000));
 
-  late final _animationControllerRow = AnimationController(
+  late final _imagesRowAnimationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 1000));
 
   final PageController _pageController = PageController();
@@ -33,12 +33,15 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
   void dispose() {
     // TODO: implement dispose
     _pageController.dispose();
-    _animationController.dispose();
+    _slideFadeAnimationController.dispose();
+    _imagesRowAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    var begin = const Offset(-3.1, 0.0);
+    var end = const Offset(2, 0);
     return PageView(
         controller: _pageController,
         scrollDirection: Axis.vertical,
@@ -58,24 +61,24 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Wrap(
                       children: [
-                        animatedText(text: 'A robot', setVariable: 1),
+                        animatedTextIntroPage1(text: 'A robot', setVariable: 1),
                         (!activateSecondaryText)
                             ? Container()
-                            : animatedText(
+                            : animatedTextIntroPage1(
                                 text: 'in a cyberpunk city', setVariable: 2),
                         (!activateTertiaryText)
                             ? Container()
-                            : animatedText(
+                            : animatedTextIntroPage1(
                                 text: 'doing chores',
                               ),
                       ],
                     ),
                   ),
                   (animationId == 1)
-                      ? imagesBuilder(1, 8)
+                      ? imagesBuilderIntroPage1(1, 8)
                       : (animationId == 2)
-                          ? imagesBuilder(9, 16)
-                          : imagesBuilder(17, 24)
+                          ? imagesBuilderIntroPage1(9, 16)
+                          : imagesBuilderIntroPage1(17, 24)
                 ])),
           ),
           Scaffold(
@@ -87,79 +90,24 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                 children: [
                   Column(
                     children: [
-                      Transform.rotate(
-                        angle: -3.14 / 18,
-                        child: SingleChildScrollView(
-                          clipBehavior: Clip.none,
-                          scrollDirection: Axis.horizontal,
-                          physics: const NeverScrollableScrollPhysics(),
-                          reverse: true,
-                          child: Row(
-                            children: [
-                              for (var i = 1; i <= 24; i++)
-                                if (i % 2 != 0)
-                                  SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(-3.1, 0.0),
-                                      end: const Offset(2, 0),
-                                    ).animate(CurvedAnimation(
-                                      parent: _animationControllerRow,
-                                      curve: Curves.fastOutSlowIn,
-                                    )),
-                                    child: SizedBox(
-                                      height: 150,
-                                      child: textResultImage(
-                                          'images/robot/$i.jpg',
-                                          paddingRight: 7),
-                                    ),
-                                  )
-                            ],
-                          ),
-                        ),
-                      ),
+                      rowImagesSlideTransitionBuilder(
+                          even: false, reverse: true),
                       const SizedBox(
                         height: 10,
                       ),
-                      Transform.rotate(
-                        angle: -3.14 / 18,
-                        child: SingleChildScrollView(
-                          clipBehavior: Clip.none,
-                          scrollDirection: Axis.horizontal,
-                          physics: const NeverScrollableScrollPhysics(),
-                          child: Row(
-                            children: [
-                              for (var i = 1; i <= 24; i++)
-                                if (i % 2 == 0)
-                                  SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(3.1, 0.0),
-                                      end: const Offset(-2, 0),
-                                    ).animate(CurvedAnimation(
-                                      parent: _animationControllerRow,
-                                      curve: Curves.fastOutSlowIn,
-                                    )),
-                                    child: SizedBox(
-                                      height: 150,
-                                      child: textResultImage(
-                                          'images/robot/$i.jpg',
-                                          paddingRight: 7),
-                                    ),
-                                  )
-                            ],
-                          ),
-                        ),
-                      ),
+                      rowImagesSlideTransitionBuilder(
+                          even: true, reverse: false)
                     ],
                   ),
                   Container(),
                   CustomSlideFadeTransition(
-                      animationController: _animationController,
+                      animationController: _slideFadeAnimationController,
                       child: const Padding(
                         padding: EdgeInsets.only(left: 15, top: 0),
                         child: AppBranding(showCompanyName: false),
                       )),
                   CustomSlideFadeTransition(
-                      animationController: _animationController,
+                      animationController: _slideFadeAnimationController,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 30),
                         child: Column(
@@ -173,7 +121,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                         ),
                       )),
                   CustomSlideFadeTransition(
-                      animationController: _animationController,
+                      animationController: _slideFadeAnimationController,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomTextButton(
@@ -190,7 +138,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                             fontSize: 20),
                       )),
                   CustomSlideFadeTransition(
-                      animationController: _animationController,
+                      animationController: _slideFadeAnimationController,
                       child: const TermsAndServicesTextWidget()),
                   Container(),
                   Container()
@@ -199,6 +147,49 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
             ),
           ),
         ]);
+  }
+
+  Widget rowImagesSlideTransitionBuilder(
+      {required bool even, required bool reverse}) {
+    return Transform.rotate(
+      angle: -3.14 / 18,
+      child: SingleChildScrollView(
+        clipBehavior: Clip.none,
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
+        reverse: reverse,
+        child: Row(children: [
+          for (var i = 1; i <= 24; i++)
+            if (i % 2 == 0 && even)
+              rowImagesSlideTransition(
+                  begin: const Offset(3.1, 0.0),
+                  end: const Offset(-2, 0),
+                  index: i)
+            else if (i % 2 != 0 && !even)
+              rowImagesSlideTransition(
+                  begin: const Offset(-3.1, 0.0),
+                  end: const Offset(2, 0),
+                  index: i)
+        ]),
+      ),
+    );
+  }
+
+  SlideTransition rowImagesSlideTransition(
+      {required Offset begin, required Offset end, required int index}) {
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: begin,
+        end: end,
+      ).animate(CurvedAnimation(
+        parent: _imagesRowAnimationController,
+        curve: Curves.fastOutSlowIn,
+      )),
+      child: SizedBox(
+        height: 150,
+        child: textResultImage('images/robot/$index.jpg', paddingRight: 7),
+      ),
+    );
   }
 
   RichText richTextSnippet({required text, required boldText}) {
@@ -216,7 +207,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
     );
   }
 
-  Expanded imagesBuilder(int start, int end) {
+  Expanded imagesBuilderIntroPage1(int start, int end) {
     return Expanded(
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 500),
@@ -248,7 +239,8 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
     );
   }
 
-  AnimatedTextKit animatedText({required String text, int? setVariable}) {
+  AnimatedTextKit animatedTextIntroPage1(
+      {required String text, int? setVariable}) {
     return AnimatedTextKit(
         isRepeatingAnimation: false,
         pause: const Duration(milliseconds: 0),
@@ -258,7 +250,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                   animationId++;
                   activateAnimation = true;
                 });
-                navigatorToNextIntroPage();
+                navigatorToIntroPage2();
               }
             : () {
                 setState(() {
@@ -298,15 +290,15 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
         ]);
   }
 
-  void navigatorToNextIntroPage() {
+  void navigatorToIntroPage2() {
     Future.delayed(const Duration(milliseconds: 1000), (() {
       _pageController
           .animateToPage(1,
               curve: Curves.ease, duration: const Duration(milliseconds: 1000))
           .whenComplete(
         () {
-          _animationControllerRow.forward();
-          _animationController.forward();
+          _imagesRowAnimationController.forward();
+          _slideFadeAnimationController.forward();
         },
       );
     }));
