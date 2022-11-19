@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stem_ai_art_generator/screens/result.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -13,7 +14,8 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
     ..addListener(() {
       setState(() {});
     })
-    ..forward();
+    ..forward().then((value) => Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const Result())));
 
   @override
   void dispose() {
