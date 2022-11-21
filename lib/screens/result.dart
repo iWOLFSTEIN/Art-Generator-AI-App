@@ -52,6 +52,7 @@ class _ResultState extends State<Result> {
                       button(
                           title: 'Re-create',
                           icon: Icons.loop,
+                          action: (){},
                           color: Colors.white),
                       const SizedBox(
                         width: 15,
@@ -59,6 +60,7 @@ class _ResultState extends State<Result> {
                       button(
                           title: 'Share',
                           icon: Icons.share_outlined,
+                          action: (){},
                           color: const Color(0xFF8BCDF9)),
                     ],
                   ),
@@ -74,7 +76,7 @@ class _ResultState extends State<Result> {
     );
   }
 
-  Expanded button({required title, required icon, required color}) {
+  Expanded button({required title, required icon, required color, required action}) {
     return Expanded(
       child: Container(
         height: 60,
@@ -82,7 +84,7 @@ class _ResultState extends State<Result> {
             color: color,
             borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: TextButton(
-            onPressed: () {},
+            onPressed: action,
             child: Row(
               children: [
                 const SizedBox(
@@ -197,7 +199,6 @@ class _ResultState extends State<Result> {
             style: TextStyle(
               color: Color(0xFF1F1F1F),
               fontSize: 18,
-              // fontWeight: FontWeight.w600
             ),
           ),
           Expanded(child: Container()),
