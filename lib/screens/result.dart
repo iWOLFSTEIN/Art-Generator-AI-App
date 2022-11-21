@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Result extends StatefulWidget {
-  const Result({Key? key}) : super(key: key);
+  const Result({Key? key, this.images, this.prompt}) : super(key: key);
+  final String? prompt;
+  final List? images;
 
   @override
   State<Result> createState() => _ResultState();
@@ -17,13 +20,45 @@ class _ResultState extends State<Result> {
   @override
   Widget build(BuildContext context) {
     List images = [
-      for (var i = 0; i < 4; i++)
+      for (var image in widget.images!)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 9),
           child: Container(
             decoration: const BoxDecoration(
                 color: Color(0xFF9ED5FA),
                 borderRadius: BorderRadius.all(Radius.circular(10))),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  child: CachedNetworkImage(
+                    imageUrl: image,
+                    fit: BoxFit.fill,
+                    fadeOutDuration: const Duration(milliseconds: 300),
+                    fadeOutCurve: Curves.easeOut,
+                    fadeInDuration: const Duration(milliseconds: 700),
+                    fadeInCurve: Curves.easeIn,
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.2),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12.5),
+                        child: Text(
+                          (toggleValue) ? widget.prompt! : '',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
     ];
@@ -52,7 +87,7 @@ class _ResultState extends State<Result> {
                       button(
                           title: 'Re-create',
                           icon: Icons.loop,
-                          action: (){},
+                          action: () {},
                           color: Colors.white),
                       const SizedBox(
                         width: 15,
@@ -60,7 +95,7 @@ class _ResultState extends State<Result> {
                       button(
                           title: 'Share',
                           icon: Icons.share_outlined,
-                          action: (){},
+                          action: () {},
                           color: const Color(0xFF8BCDF9)),
                     ],
                   ),
@@ -76,7 +111,8 @@ class _ResultState extends State<Result> {
     );
   }
 
-  Expanded button({required title, required icon, required color, required action}) {
+  Expanded button(
+      {required title, required icon, required color, required action}) {
     return Expanded(
       child: Container(
         height: 60,
@@ -188,10 +224,15 @@ class _ResultState extends State<Result> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.close,
-            color: Color(0xFF1F1F1F),
-            size: 27.5,
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.close,
+              color: Color(0xFF1F1F1F),
+              size: 27.5,
+            ),
           ),
           Expanded(child: Container()),
           const Text(

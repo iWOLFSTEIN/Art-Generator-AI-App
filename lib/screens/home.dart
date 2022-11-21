@@ -99,11 +99,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: CustomTextButton(
                   buttonHeight: 60.0,
                   action: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Loading()));
-
+                    if (inputController.text != '') {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Loading(
+                                    prompt: inputController.text,
+                                  )));
+                    }
                     // var alert = CustomAlertDialogue(
                     //   title: 'Are you sure you want to re-generate the image?',
                     //   subtitle:

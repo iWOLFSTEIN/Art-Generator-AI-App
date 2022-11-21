@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/screens/result.dart';
+import 'package:stem_ai_art_generator/services/api_call.dart';
+
+import '../provider/database_provider.dart';
 
 class Loading extends StatefulWidget {
-  const Loading({Key? key}) : super(key: key);
+  const Loading({Key? key, this.prompt}) : super(key: key);
+
+  final String? prompt;
 
   @override
   State<Loading> createState() => _LoadingState();
@@ -10,12 +16,36 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
   late final _progressBarAnimationController = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 5000))
+      vsync: this, duration: const Duration(milliseconds: 15000))
     ..addListener(() {
       setState(() {});
     })
-    ..forward().then((value) => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Result())));
+    ..forward().then((value) => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Result(
+                  prompt: widget.prompt,
+                  images: images,
+                ))));
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getImagesResponse();
+  }
+
+  List images = [];
+
+  getImagesResponse() async {
+    var databaseProvider =
+        Provider.of<DatabaseProvider>(context, listen: false);
+    var responseData = await imagesUrls(
+        prompt: widget.prompt, token: databaseProvider.jwtToken);
+    for (var data in responseData['data']) {
+      images.add(data['url']);
+    }
+  }
 
   @override
   void dispose() {
