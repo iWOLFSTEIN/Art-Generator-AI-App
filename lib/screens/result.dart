@@ -4,10 +4,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:stem_ai_art_generator/screens/loading.dart';
 import 'package:stem_ai_art_generator/services/save_network_image.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-import '../widgets/custom_alert_dialogue.dart';
+import '../widgets/custom_alert_dialogues.dart';
 
 class Result extends StatefulWidget {
   const Result({Key? key, this.images, this.prompt}) : super(key: key);
@@ -104,7 +105,7 @@ class _ResultState extends State<Result> {
                           title: 'Re-create',
                           icon: Icons.loop,
                           action: () {
-                            showAlertDialogue();
+                            showModifiedAlert();
                           },
                           color: Colors.white),
                       const SizedBox(
@@ -271,6 +272,7 @@ class _ResultState extends State<Result> {
               padding: const EdgeInsets.all(14.5),
               child: (isDownloading)
                   ? const CircularProgressIndicator(
+                      strokeWidth: 3,
                       color: Colors.white,
                     )
                   : GestureDetector(
@@ -290,12 +292,19 @@ class _ResultState extends State<Result> {
     );
   }
 
-  showAlertDialogue() {
-    var alert = CustomAlertDialogue(
+  showModifiedAlert() {
+    var alert = CustomModifiedAlertDialogue(
       title: 'Are you sure you want to re-generate the image?',
       subtitle: 'Make sure you saved the image you liked before proceeding.',
       actionTitle: 'Generate Again',
-      action: () {},
+      action: () {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Loading(
+                      prompt: widget.prompt,
+                    )));
+      },
     );
     showDialog(context: context, builder: (context) => alert);
   }

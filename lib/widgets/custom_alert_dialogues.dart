@@ -40,51 +40,10 @@ class CustomModifiedAlertDialogue extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Column(
-              //   children: [
-              //     Text(
-              //       title!,
-              //       textAlign: TextAlign.center,
-              //       style: const TextStyle(
-              //           fontSize: 18,
-              //           color: Color(0xFF1F1F1F),
-              //           fontWeight: FontWeight.w600,
-              //           height: 1.1),
-              //     ),
-              //     const SizedBox(
-              //       height: 12.5,
-              //     ),
-              //     Text(
-              //       subtitle!,
-              //       textAlign: TextAlign.center,
-              //       style: const TextStyle(
-              //         fontSize: 15,
-              //         color: Color(0xFF1F1F1F),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               AlertTitleSubtitle(title: title, subtitle: subtitle),
               Container(),
               Container(),
               AlertButton(action: action, actionTitle: actionTitle),
-              // Container(
-              //   height: 70,
-              //   width: double.infinity,
-              //   decoration: const BoxDecoration(
-              //       color: Color(0xFF9ED5FA),
-              //       borderRadius: BorderRadius.all(Radius.circular(15))),
-              //   child: TextButton(
-              //       onPressed: action,
-              //       child: Text(
-              //         actionTitle!,
-              //         style: const TextStyle(
-              //           fontWeight: FontWeight.w600,
-              //           fontSize: 18.5,
-              //           color: Color(0xFF1F1F1F),
-              //         ),
-              //       )),
-              // ),
               Container(),
               Container(),
               GestureDetector(
