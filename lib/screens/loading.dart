@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/screens/result.dart';
@@ -20,13 +22,7 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
     ..addListener(() {
       setState(() {});
     })
-    ..forward().then((value) => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Result(
-                  prompt: widget.prompt,
-                  images: images,
-                ))));
+    ..forward().then((value) => Navigator.pop(context));
 
   @override
   void initState() {
@@ -38,12 +34,35 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
   List images = [];
 
   getImagesResponse() async {
-    var databaseProvider =
-        Provider.of<DatabaseProvider>(context, listen: false);
-    var responseData = await imagesUrls(
-        prompt: widget.prompt, token: databaseProvider.jwtToken);
-    for (var data in responseData['data']) {
-      images.add(data['url']);
+    try {
+      var databaseProvider =
+          Provider.of<DatabaseProvider>(context, listen: false);
+
+      var responseData = await imagesUrls(
+          prompt: widget.prompt, token: databaseProvider.jwtToken);
+
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (responseData != null) {
+          print('response is not empty');
+          timer.cancel();
+          _progressBarAnimationController
+              .animateTo(1.0, duration: const Duration(milliseconds: 300))
+              .then((value) => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Result(
+                            prompt: widget.prompt,
+                            images: images,
+                          ))));
+        }
+      });
+
+      for (var data in responseData['data']) {
+        images.add(data['url']);
+      }
+    } catch (e) {
+      print(e.toString());
+      Navigator.pop(context);
     }
   }
 
@@ -64,18 +83,18 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (_progressBarAnimationController.value <= 0.25)
+            if (_progressBarAnimationController.value <= 0.20)
               const Text(
                 'Analyzing Prompt...',
                 style: TextStyle(fontSize: 20.5),
               ),
-            if (_progressBarAnimationController.value > 0.25 &&
-                _progressBarAnimationController.value <= 0.5)
+            if (_progressBarAnimationController.value > 0.20 &&
+                _progressBarAnimationController.value <= 0.4)
               const Text(
                 'Generating Image...',
                 style: TextStyle(fontSize: 20.5),
               ),
-            if (_progressBarAnimationController.value > 0.5)
+            if (_progressBarAnimationController.value > 0.4)
               const Text(
                 'Adjusting Colors...',
                 style: TextStyle(fontSize: 20.5),

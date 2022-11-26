@@ -1,8 +1,13 @@
+import 'package:alert/alert.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:stem_ai_art_generator/services/save_network_image.dart';
+import 'package:transparent_image/transparent_image.dart';
+
+import '../widgets/custom_alert_dialogue.dart';
 
 class Result extends StatefulWidget {
   const Result({Key? key, this.images, this.prompt}) : super(key: key);
@@ -17,6 +22,7 @@ class _ResultState extends State<Result> {
   final CarouselController carouselController = CarouselController();
   var currentIndex = 0;
   bool toggleValue = false;
+  bool isDownloading = false;
   @override
   Widget build(BuildContext context) {
     List images = [
@@ -32,13 +38,23 @@ class _ResultState extends State<Result> {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: CachedNetworkImage(
-                    imageUrl: image,
+                  child:
+
+                      //  CachedNetworkImage(
+                      //   imageUrl: image,
+                      //   fit: BoxFit.fill,
+                      //   fadeOutDuration: const Duration(milliseconds: 300),
+                      //   fadeOutCurve: Curves.easeOut,
+                      //   fadeInDuration: const Duration(milliseconds: 700),
+                      //   fadeInCurve: Curves.easeIn,
+                      //   placeholder: (context, url) => const Center(
+                      //     child: CircularProgressIndicator(),
+                      //   ),
+                      // ),
+                      FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: image,
                     fit: BoxFit.fill,
-                    fadeOutDuration: const Duration(milliseconds: 300),
-                    fadeOutCurve: Curves.easeOut,
-                    fadeInDuration: const Duration(milliseconds: 700),
-                    fadeInCurve: Curves.easeIn,
                   ),
                 ),
                 Container(
@@ -87,7 +103,9 @@ class _ResultState extends State<Result> {
                       button(
                           title: 'Re-create',
                           icon: Icons.loop,
-                          action: () {},
+                          action: () {
+                            showAlertDialogue();
+                          },
                           color: Colors.white),
                       const SizedBox(
                         width: 15,
@@ -249,17 +267,56 @@ class _ResultState extends State<Result> {
             decoration: const BoxDecoration(
                 color: Color(0xFF1F1F1F),
                 borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: const Padding(
-              padding: EdgeInsets.all(14.5),
-              child: ImageIcon(
-                AssetImage('images/download.png'),
-                color: Colors.white,
-                size: 22.5,
-              ),
+            child: Padding(
+              padding: const EdgeInsets.all(14.5),
+              child: (isDownloading)
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : GestureDetector(
+                      onTap: () async {
+                        await saveImage();
+                      },
+                      child: const ImageIcon(
+                        AssetImage('images/download.png'),
+                        color: Colors.white,
+                        size: 22.5,
+                      ),
+                    ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  showAlertDialogue() {
+    var alert = CustomAlertDialogue(
+      title: 'Are you sure you want to re-generate the image?',
+      subtitle: 'Make sure you saved the image you liked before proceeding.',
+      actionTitle: 'Generate Again',
+      action: () {},
+    );
+    showDialog(context: context, builder: (context) => alert);
+  }
+
+  saveImage() async {
+    setState(() {
+      isDownloading = true;
+    });
+    try {
+      var isImageSaved = await saveNetworkImage(widget.images![currentIndex]);
+      if (isImageSaved) {
+        setState(() {
+          isDownloading = false;
+        });
+        Alert(message: 'Image saved in Gallery').show();
+      }
+    } catch (e) {
+      setState(() {
+        isDownloading = false;
+      });
+      print(e.toString());
+    }
   }
 }

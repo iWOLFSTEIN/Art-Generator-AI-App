@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stem_ai_art_generator/database/database.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
 import 'package:stem_ai_art_generator/provider/database_provider.dart';
+import 'package:stem_ai_art_generator/screens/home.dart';
 import 'package:stem_ai_art_generator/screens/intro.dart';
 import 'package:stem_ai_art_generator/screens/result.dart';
 import 'package:stem_ai_art_generator/services/api_call.dart';
@@ -67,7 +68,7 @@ class _StartAppState extends State<StartApp> {
       debugShowCheckedModeBanner: false,
       title: 'Stem AI',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Poppins'),
-      home: const Intro(),
+      home: const Home(),
     );
   }
 }

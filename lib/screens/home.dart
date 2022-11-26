@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
 import 'package:stem_ai_art_generator/screens/loading.dart';
+import 'package:stem_ai_art_generator/services/save_network_image.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
 import '../widgets/app_branding.dart';
+import '../widgets/custom_alert_dialogues.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/generated_image.dart';
 import '../widgets/input_prompt.dart';
@@ -15,17 +17,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  late final _animationController = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 1000));
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _animationController.dispose();
-    super.dispose();
-  }
-
+class _HomeState extends State<Home> {
   final inputController = TextEditingController();
   List images = [
     'https://cdn.britannica.com/91/181391-050-1DA18304/cat-toes-paw-number-paws-tiger-tabby.jpg',
@@ -99,22 +91,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: CustomTextButton(
                   buttonHeight: 60.0,
                   action: () {
-                    if (inputController.text != '') {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Loading(
-                                    prompt: inputController.text,
-                                  )));
-                    }
-                    // var alert = CustomAlertDialogue(
-                    //   title: 'Are you sure you want to re-generate the image?',
-                    //   subtitle:
-                    //       'Make sure you saved the image you liked before proceeding.',
-                    //   actionTitle: 'Generate Again',
-                    //   action: () {},
-                    // );
-                    // showDialog(context: context, builder: (context) => alert);
+                    generateImage();
                   },
                   title: 'Generate Image',
                   borderRadius: 15,
@@ -178,5 +155,30 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  generateImage() {
+    if (inputController.text != '') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Loading(
+                    prompt: inputController.text,
+                  )));
+    } else {
+      showGeneralAlert();
+    }
+  }
+
+  showGeneralAlert() {
+    var alert = CustomGeneralAlertDialogue(
+      title: 'Text field cannot be empty!',
+      subtitle: 'Please enter something in the text field to generate images.',
+      actionTitle: 'Okay',
+      action: () {
+        Navigator.pop(context);
+      },
+    );
+    showDialog(context: context, builder: (context) => alert);
   }
 }

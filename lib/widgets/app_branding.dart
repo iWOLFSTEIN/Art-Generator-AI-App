@@ -20,7 +20,7 @@ class AppBranding extends StatelessWidget {
               Opacity(
                   opacity: 1.0,
                   child: ImageIcon(
-                    AssetImage('images/technology.png'),
+                    AssetImage('images/LOGO2.png'),
                     size: 23,
                     color: Color(0xFF1F1F1F),
                   )
