@@ -30,11 +30,8 @@ class _InputPromptState extends State<InputPrompt> {
           duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7.5),
           decoration: BoxDecoration(
-              color: (isPromptAnimated)
-                  ? Color(0xFF77C4F8)
-                  //  const Color(0xFFFFC2D4)
-                  // const Color(0xFFFAF4B7)
-                  : Colors.white,
+              color:
+                  (isPromptAnimated) ? const Color(0xFF77C4F8) : Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(25))),
           child: Text(
             widget.prompt,

@@ -45,19 +45,15 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
         if (responseData != null) {
           print('response is not empty');
           timer.cancel();
-          try {
-            _progressBarAnimationController
-                .animateTo(1.0, duration: const Duration(milliseconds: 300))
-                .then((value) => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Result(
-                              prompt: widget.prompt,
-                              images: images,
-                            ))));
-          } catch (e) {
-            print(e.toString());
-          }
+          _progressBarAnimationController
+              .animateTo(1.0, duration: const Duration(milliseconds: 300))
+              .then((value) => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Result(
+                            prompt: widget.prompt,
+                            images: images,
+                          ))));
         }
       });
 
@@ -66,7 +62,9 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
       }
     } catch (e) {
       print(e.toString());
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 

@@ -1,11 +1,13 @@
 import 'package:alert/alert.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:stem_ai_art_generator/screens/loading.dart';
-import 'package:stem_ai_art_generator/services/save_network_image.dart';
+import 'package:stem_ai_art_generator/services/save_image.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../widgets/custom_alert_dialogues.dart';
@@ -21,60 +23,57 @@ class Result extends StatefulWidget {
 
 class _ResultState extends State<Result> {
   final CarouselController carouselController = CarouselController();
+  List screenshotControllers = [
+    ScreenshotController(),
+    ScreenshotController(),
+    ScreenshotController(),
+    ScreenshotController(),
+  ];
   var currentIndex = 0;
   bool toggleValue = false;
   bool isDownloading = false;
+
   @override
   Widget build(BuildContext context) {
     List images = [
-      for (var image in widget.images!)
+      for (var i = 0; i < widget.images!.length; i++)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 9),
           child: Container(
             decoration: const BoxDecoration(
                 color: Color(0xFF9ED5FA),
                 borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child:
-
-                      //  CachedNetworkImage(
-                      //   imageUrl: image,
-                      //   fit: BoxFit.fill,
-                      //   fadeOutDuration: const Duration(milliseconds: 300),
-                      //   fadeOutCurve: Curves.easeOut,
-                      //   fadeInDuration: const Duration(milliseconds: 700),
-                      //   fadeInCurve: Curves.easeIn,
-                      //   placeholder: (context, url) => const Center(
-                      //     child: CircularProgressIndicator(),
-                      //   ),
-                      // ),
-                      FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: image,
-                    fit: BoxFit.fill,
-                  ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              child: Screenshot(
+                controller: screenshotControllers[i],
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: widget.images![i],
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.2),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12.5),
+                            child: Text(
+                              (toggleValue) ? widget.prompt! : '',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.2),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12.5),
-                        child: Text(
-                          (toggleValue) ? widget.prompt! : '',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      )),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -314,13 +313,14 @@ class _ResultState extends State<Result> {
       isDownloading = true;
     });
     try {
-      var isImageSaved = await saveNetworkImage(widget.images![currentIndex]);
-      if (isImageSaved) {
+      screenshotControllers[currentIndex].capture().then((image) async {
         setState(() {
           isDownloading = false;
         });
-        Alert(message: 'Image saved in Gallery').show();
-      }
+
+        await saveGalleryImage(image);
+        Alert(message: 'Image saved in Stem AI').show();
+      });
     } catch (e) {
       setState(() {
         isDownloading = false;
