@@ -26,7 +26,7 @@ imagesUrls({required prompt}) async {
           'https://api.openai.com/v1/images/generations'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $dallEApiKey',
+        'Authorization': 'Bearer $key',
       },
       body: payload);
 
