@@ -1,1 +1,3 @@
-const String key = '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';
+// paste your open ai key here
+
+const String key = '';
