@@ -8,6 +8,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:stem_ai_art_generator/screens/loading.dart';
 import 'package:stem_ai_art_generator/services/save_image.dart';
+import 'package:stem_ai_art_generator/utils/share_art.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../widgets/custom_alert_dialogues.dart';
@@ -113,7 +114,9 @@ class _ResultState extends State<Result> {
                       button(
                           title: 'Share',
                           icon: Icons.share_outlined,
-                          action: () {},
+                          action: () {
+                            shareImage(imageUrl: widget.images![currentIndex]);
+                          },
                           color: const Color(0xFF8BCDF9)),
                     ],
                   ),

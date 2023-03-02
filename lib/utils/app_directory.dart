@@ -6,23 +6,23 @@ import 'package:stem_ai_art_generator/utils/permissions_manager.dart';
 // getAppDirectory() async {
 //   var directory;
 
-//   if (await requestPermission(Permission.storage)) {
-//     if (await requestPermission(Permission.manageExternalStorage)) {
-//       var tempDirectory = Directory(await _getPath());
-//       if (await tempDirectory.exists()) {
-//         directory = tempDirectory.path;
-//       } else {
-//         directory = tempDirectory.create().then((value) => value.path);
-//       }
+// if (await requestPermission(Permission.storage)) {
+//   if (await requestPermission(Permission.manageExternalStorage)) {
+//     var tempDirectory = Directory(await _getPath());
+//     if (await tempDirectory.exists()) {
+//       directory = tempDirectory.path;
 //     } else {
-//       var tempDirectory = Directory(await _getPath());
-//       if (await tempDirectory.exists()) {
-//         directory = tempDirectory.path;
-//       } else {
-//         directory = tempDirectory.create().then((value) => value.path);
-//       }
+//       directory = tempDirectory.create().then((value) => value.path);
+//     }
+//   } else {
+//     var tempDirectory = Directory(await _getPath());
+//     if (await tempDirectory.exists()) {
+//       directory = tempDirectory.path;
+//     } else {
+//       directory = tempDirectory.create().then((value) => value.path);
 //     }
 //   }
+// }
 
 //   return directory;
 // }
@@ -45,6 +45,30 @@ import 'package:stem_ai_art_generator/utils/permissions_manager.dart';
 // }
 
 Future<String?> getDownloadPath() async {
+  // Directory? directory;
+  // try {
+  //   if (Platform.isIOS) {
+  //     directory = await getApplicationDocumentsDirectory();
+  //   } else {
+  //     directory = Directory('/storage/emulated/0/Download');
+  //     if (!await directory.exists())
+  //       directory = await getExternalStorageDirectory();
+  //   }
+  // } catch (err, stack) {
+  //   print("Cannot get download folder path");
+  // }
+  // return directory?.path;
+
+  if (await requestPermission(Permission.storage)) {
+    if (await requestPermission(Permission.manageExternalStorage)) {
+      return await getPath();
+    } else {
+      return await getPath();
+    }
+  }
+}
+
+Future<String?> getPath() async {
   Directory? directory;
   try {
     if (Platform.isIOS) {
