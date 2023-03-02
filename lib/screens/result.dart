@@ -319,7 +319,7 @@ class _ResultState extends State<Result> {
         });
 
         await saveGalleryImage(image);
-        Alert(message: 'Image saved in Stem AI').show();
+        Alert(message: 'Saved in downloads').show();
       });
     } catch (e) {
       setState(() {
