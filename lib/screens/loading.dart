@@ -43,26 +43,28 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
         prompt: widget.prompt,
         //  token: databaseProvider.jwtToken
       );
-
-      Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (responseData != null) {
-          print('response is not empty');
-          timer.cancel();
-          _progressBarAnimationController
-              .animateTo(1.0, duration: const Duration(milliseconds: 300))
-              .then((value) => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Result(
-                            prompt: widget.prompt,
-                            images: images,
-                          ))));
-        }
-      });
+      print(responseData);
 
       for (var data in responseData['data']) {
         images.add(data['url']);
       }
+
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (responseData != null) {
+          timer.cancel();
+          if (mounted) {
+            _progressBarAnimationController
+                .animateTo(1.0, duration: const Duration(milliseconds: 300))
+                .then((value) => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Result(
+                              prompt: widget.prompt,
+                              images: images,
+                            ))));
+          }
+        }
+      });
     } catch (e) {
       print(e.toString());
       if (mounted) {
