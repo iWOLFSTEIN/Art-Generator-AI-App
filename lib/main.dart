@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stem_ai_art_generator/database/database.dart';
@@ -11,8 +12,9 @@ import 'package:stem_ai_art_generator/screens/result.dart';
 import 'package:stem_ai_art_generator/services/api_call.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
 }
 
@@ -24,11 +26,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => DataProvider()),
-        ChangeNotifierProvider(create: (context) => Database()),
-        ChangeNotifierProxyProvider<Database, DatabaseProvider>(
-            create: (context) => DatabaseProvider(Database(), ''),
-            update: (context, database, databaseProvider) =>
-                DatabaseProvider(database, databaseProvider!.jwtToken)),
+        // ChangeNotifierProvider(create: (context) => Database()),
+        // ChangeNotifierProxyProvider<Database, DatabaseProvider>(
+        //     create: (context) => DatabaseProvider(Database(), ''),
+        //     update: (context, database, databaseProvider) =>
+        //         DatabaseProvider(database, databaseProvider!.jwtToken)),
       ],
       child: const StartApp(),
     );
@@ -43,23 +45,33 @@ class StartApp extends StatefulWidget {
 }
 
 class _StartAppState extends State<StartApp> {
+  bool newUser = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    getJwtToken();
+    getUserState();
+    // getJwtToken();
   }
 
-  getJwtToken() async {
-    var databaseProvider =
-        Provider.of<DatabaseProvider>(context, listen: false);
-    await SharedPreferences.getInstance();
+  // getJwtToken() async {
+  //   var databaseProvider =
+  //       Provider.of<DatabaseProvider>(context, listen: false);
+  //   await SharedPreferences.getInstance();
 
-    if (databaseProvider.jwtToken == '') {
-      var token = await serverLogin();
-      databaseProvider.setJwtToken(value: token['token']);
-    }
+  //   if (databaseProvider.jwtToken == '') {
+  //     var token = await serverLogin();
+  //     databaseProvider.setJwtToken(value: token['token']);
+  //   }
+  // }
+
+  getUserState() async {
+    bool userState = await Database().isNewUser();
+    setState(() {
+      newUser = userState;
+    });
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -68,7 +80,7 @@ class _StartAppState extends State<StartApp> {
       debugShowCheckedModeBanner: false,
       title: 'Stem AI',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Poppins'),
-      home: const Home(),
+      home: newUser ? const Intro() : const Home(),
     );
   }
 }

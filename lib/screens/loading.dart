@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/screens/result.dart';
 import 'package:stem_ai_art_generator/services/api_call.dart';
+import 'package:stem_ai_art_generator/utils/secrets.dart';
 
 import '../provider/database_provider.dart';
 
@@ -35,11 +36,13 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
 
   getImagesResponse() async {
     try {
-      var databaseProvider =
-          Provider.of<DatabaseProvider>(context, listen: false);
+      // var databaseProvider =
+      //     Provider.of<DatabaseProvider>(context, listen: false);
 
       var responseData = await imagesUrls(
-          prompt: widget.prompt, token: databaseProvider.jwtToken);
+        prompt: widget.prompt,
+        //  token: databaseProvider.jwtToken
+      );
 
       Timer.periodic(const Duration(seconds: 1), (timer) {
         if (responseData != null) {

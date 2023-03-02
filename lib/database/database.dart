@@ -1,17 +1,30 @@
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Database with ChangeNotifier {
-  getJwtToken() async {
+class Database
+//  with ChangeNotifier
+{
+  // getJwtToken() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   String token = prefs.getString("token") ?? '';
+
+  //   return token;
+  // }
+
+  // setJwtToken({required String value}) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('token', value);
+  // }
+
+  Future<bool> isNewUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String token = prefs.getString("token") ?? '';
-
-    return token;
+    bool newStemAIUser = prefs.getBool("newStemAIUser") ?? true;
+    return newStemAIUser;
   }
 
-  setJwtToken({required String value}) async {
+  Future<void> setUserState({required bool newUser}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', value);
+    prefs.setBool('newStemAIUser', newUser);
   }
 }

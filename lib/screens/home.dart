@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stem_ai_art_generator/provider/data_provider.dart';
 import 'package:stem_ai_art_generator/screens/loading.dart';
-import 'package:stem_ai_art_generator/services/save_network_image.dart';
+import 'package:stem_ai_art_generator/services/save_image.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
 import '../widgets/app_branding.dart';
 import '../widgets/custom_alert_dialogues.dart';

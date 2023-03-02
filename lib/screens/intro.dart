@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:stem_ai_art_generator/database/database.dart';
 import 'package:stem_ai_art_generator/screens/home.dart';
 import 'package:stem_ai_art_generator/widgets/app_branding.dart';
 import 'package:stem_ai_art_generator/widgets/custom_text_button.dart';
@@ -126,12 +127,13 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomTextButton(
                             buttonHeight: 70,
-                            action: () {
+                            action: () async {
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const Home()),
                                   (route) => false);
+                              await Database().setUserState(newUser: false);
                             },
                             title: 'Get Started',
                             borderRadius: 20,
