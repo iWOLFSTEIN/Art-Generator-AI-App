@@ -12,15 +12,15 @@ import 'package:stem_ai_art_generator/utils/secrets.dart';
 // }
 
 // imagesUrls({required prompt, required token}) async {
-//   var response = await http.get(Uri.parse(getImagesUrl + prompt), headers: {
-//     'Authorization': 'Bearer $token',
-//   });
+// var response = await http.get(Uri.parse(getImagesUrl + prompt), headers: {
+//   'Authorization': 'Bearer $token',
+// });
 
 //   return json.decode(response.body);
 // }
 
 imagesUrls({required prompt}) async {
-  var payload = jsonEncode({"prompt": prompt, "n": 4, "size": "512x512"});
+  var payload = jsonEncode({"prompt": prompt, "n": 2, "size": "512x512"});
   var response = await http.post(Uri.parse(
           // getImagesUrl + prompt
           'https://api.openai.com/v1/images/generations'),

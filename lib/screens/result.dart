@@ -8,7 +8,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:stem_ai_art_generator/screens/loading.dart';
 import 'package:stem_ai_art_generator/services/save_image.dart';
-import 'package:stem_ai_art_generator/utils/share_art.dart';
+import 'package:stem_ai_art_generator/utils/share_image.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../widgets/custom_alert_dialogues.dart';
@@ -91,7 +91,7 @@ class _ResultState extends State<Result> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 children: [
-                  dotIndicator(),
+                  dotIndicator(images),
                   const SizedBox(
                     height: 25,
                   ),
@@ -165,11 +165,11 @@ class _ResultState extends State<Result> {
     );
   }
 
-  AnimatedSmoothIndicator dotIndicator() {
+  AnimatedSmoothIndicator dotIndicator(List<dynamic> images) {
     return AnimatedSmoothIndicator(
       activeIndex: currentIndex,
       duration: const Duration(milliseconds: 500),
-      count: 4,
+      count: images.length,
       effect: const SlideEffect(
           dotHeight: 9,
           dotWidth: 9,
@@ -316,19 +316,21 @@ class _ResultState extends State<Result> {
       isDownloading = true;
     });
     try {
-      screenshotControllers[currentIndex].capture().then((image) async {
-        setState(() {
-          isDownloading = false;
-        });
-
-        await saveGalleryImage(image);
-        Alert(message: 'Saved in downloads').show();
+      // screenshotControllers[currentIndex].capture().then((image) async {
+      await saveNetworkImageToDisk(widget.images![currentIndex]);
+      setState(() {
+        isDownloading = false;
       });
+
+      // await saveGalleryImage(image, widget.images![currentIndex]);
+
+      Alert(message: 'Saved in downloads').show();
+      // });
     } catch (e) {
       setState(() {
         isDownloading = false;
       });
-      print(e.toString());
+      // print(e.toString());
     }
   }
 }

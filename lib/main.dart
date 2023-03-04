@@ -80,7 +80,8 @@ class _StartAppState extends State<StartApp> {
       debugShowCheckedModeBanner: false,
       title: 'Stem AI',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Poppins'),
-      home: newUser ? const Intro() : const Home(),
+      // home: newUser ? const Intro() : const Home(),
+      home: Intro(),
     );
   }
 }

@@ -45,7 +45,9 @@ class _GeneratedImageState extends State<GeneratedImage> {
               containerHeight = postRenderedHeight!;
             });
           }
-        } catch (e) {}
+        } catch (e) {
+          // print(e.toString());
+        }
         // print(containerHeight);
       });
     });
@@ -78,6 +80,13 @@ class _GeneratedImageState extends State<GeneratedImage> {
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
+
+              // Container(
+              //   height: imageProvider.maxHeight?.toDouble(),
+              //   width: imageProvider.maxWidth?.toDouble(),
+              //   decoration:
+              //       BoxDecoration(image: DecorationImage(image: imageProvider)),
+              // ),
               //     Container(
               //       height: containerHeight,
               //       color: Colors.black.withOpacity(0.3),
