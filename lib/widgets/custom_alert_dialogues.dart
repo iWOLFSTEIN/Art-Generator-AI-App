@@ -53,7 +53,7 @@ class CustomModifiedAlertDialogue extends StatelessWidget {
                 child: const Text(
                   'Go Back',
                   style: TextStyle(
-                    fontWeight: FontWeight.w600,
+                    // fontWeight: FontWeight.w600,
                     fontSize: 18.5,
                     color: Color(0xFF1F1F1F),
                   ),
@@ -144,7 +144,7 @@ class AlertButton extends StatelessWidget {
           child: Text(
             actionTitle!,
             style: const TextStyle(
-              fontWeight: FontWeight.w600,
+              // fontWeight: FontWeight.w600,
               fontSize: 18.5,
               color: Color(0xFF1F1F1F),
             ),

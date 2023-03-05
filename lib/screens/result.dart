@@ -46,35 +46,40 @@ class _ResultState extends State<Result> {
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: Screenshot(
-                controller: screenshotControllers[i],
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    FadeInImage.memoryNetwork(
+              child:
+                  // Screenshot(
+                  //   controller: screenshotControllers[i],
+                  //   child:
+                  Stack(
+                fit: StackFit.expand,
+                children: [
+                  Screenshot(
+                    controller: screenshotControllers[i],
+                    child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
                       image: widget.images![i],
                       fit: BoxFit.fill,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.2),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12.5),
-                            child: Text(
-                              (toggleValue) ? widget.prompt! : '',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          )),
-                    ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.2),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12.5),
+                          child: Text(
+                            (toggleValue) ? widget.prompt! : '',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        )),
+                  ),
+                ],
               ),
+              // ),
             ),
           ),
         ),
@@ -115,7 +120,7 @@ class _ResultState extends State<Result> {
                           title: 'Share',
                           icon: Icons.share_outlined,
                           action: () {
-                            shareImage(imageUrl: widget.images![currentIndex]);
+                            shareCapturedImage();
                           },
                           color: const Color(0xFF8BCDF9)),
                     ],
@@ -316,21 +321,36 @@ class _ResultState extends State<Result> {
       isDownloading = true;
     });
     try {
-      // screenshotControllers[currentIndex].capture().then((image) async {
-      await saveNetworkImageToDisk(widget.images![currentIndex]);
-      setState(() {
-        isDownloading = false;
+      screenshotControllers[currentIndex].capture().then((image) async {
+        // await saveNetworkImageToDisk(widget.images![currentIndex]);
+        setState(() {
+          isDownloading = false;
+        });
+
+        await saveGalleryImage(image, widget.images![currentIndex]);
+
+        Alert(message: 'Saved successfully').show();
       });
-
-      // await saveGalleryImage(image, widget.images![currentIndex]);
-
-      Alert(message: 'Saved in downloads').show();
-      // });
     } catch (e) {
       setState(() {
         isDownloading = false;
       });
-      // print(e.toString());
+    }
+  }
+
+  shareCapturedImage() async {
+    try {
+      screenshotControllers[currentIndex]
+          .capture()
+          .then((Uint8List? image) async {
+        if (image != null) {
+          await shareImage(image, widget.images![currentIndex]);
+        }
+      });
+    } catch (e) {
+      setState(() {
+        isDownloading = false;
+      });
     }
   }
 }
